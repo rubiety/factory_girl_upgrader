@@ -1,0 +1,62 @@
+= Factory Girl Upgrader
+
+Uses ruby_parser and ruby_scribe to dynamically convert factory_girl factories in the V1 DSL into the V2 DSL.
+
+== In-Progress
+
+NOTE: This gem is not essentially unusable and is being continually worked on - more of a proof of concept for now.
+
+== Command-Line Usage
+
+The gem comes with a thor task that you can use to print out a converted version of any Ruby file containing factory_girl V1 code:
+
+  $ factory_girl_upgrader cat test_project.rb
+
+== API Usage
+
+This is built on the tree-walking base class RubyTransform::Transformer from the +ruby_transform+ project. 
+The principal transform, which is a composite of other more granular transforms, is +RSpecify::Transformer+. 
+Here's how it can be used in conjunction with +ruby_parser+:
+
+  sexp = RubyParser.new.parse(File.read(path))
+  sexp = FactoryGirl::Upgrader::Transformer.new.transform(sexp)
+
+  emitter = RubyScribe::Emitter.new
+  emitter.methods_without_parenthesis += ["factory"]
+  emitter.emit(sexp)
+
+== Supported factory_girl V1 features:
+
+* Simple attribute setting
+* Sequences with a block
+* Associations (without options)
+
+NOTE: Indeed, this is only the basics. This will be expanded in the future to be a more comprehensive set of transformations.
+
+== Limitations
+
+To make this more DSL-friendly without parentheses requires expansion of the emitter configuration on ruby_scribe 
+(we need to be able to give ruby_scribe AST node hints on parentheses and block style).
+
+== Example:
+
+=== Original (factory_girl V1):
+
+  Factory.define(:product) do |f|
+    f.association :category
+    f.sequence(:name) {|n| "Product #{n}" }
+    f.price 19.95
+  end
+
+
+=== Transformed (factory_girl V2):
+
+  FactoryGirl.define do 
+    factory :product do
+      category
+      price(19.95)
+      sequence(:name) do |n| 
+        "Product #{n}"
+      end
+    end
+  end
