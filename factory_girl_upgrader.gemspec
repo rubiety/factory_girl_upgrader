@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.summary     = "Converts factory_girl V1 DSL factories to factory_girl V2 DSL."
   s.description = "Uses ruby_parser and ruby_scribe to dynamically convert factory_girl factories in the V1 DSL into the V2 DSL."
   
+  s.executables = ["factory_girl_upgrader"]
   s.files        = Dir["{lib,spec}/**/*", "[A-Z]*", "init.rb"]
   s.require_path = "lib"
   
