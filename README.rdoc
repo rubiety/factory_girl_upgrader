@@ -1,3 +1,5 @@
+{<img src="https://secure.travis-ci.org/rubiety/factory_girl_upgrader.png?branch=master" alt="Build Status" />}[http://travis-ci.org/rubiety/factory_girl_upgrader]
+
 = Factory Girl Upgrader
 
 Uses ruby_parser and ruby_scribe to dynamically convert factory_girl factories in the V1 DSL into the V2 DSL.
